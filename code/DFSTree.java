@@ -1,4 +1,9 @@
-import java.util.Collections;
+/**
+     * @author Sean Rowe
+     * December 15th, 2020
+     * MSCI 240 Final Project
+     */
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -8,16 +13,29 @@ import java.util.Map;
 import java.util.Set;
 
 
+/**
+ * This class is meant to implement a Depth-First Search Tree from an 
+ * undirected graph so that information (such as the number of connected
+ * components, maximum component size, etc.) can be found
+ *
+ */
 public class DFSTree {
     private IntGraphList graph;
     private ArrayList<Integer> componentSizes;
     private Map<Integer, Integer> parents;
     private Map<Integer, Boolean> visited;
 
+    /**
+     * Puts together information for the DFS tree
+     * 
+     * @param graph - an undirected graph representing the connection
+     * between actors
+     */
     public DFSTree(IntGraphList graph) {
         this.graph = graph;
         this.visited = new HashMap<Integer, Boolean>();
         this.parents = new HashMap<Integer, Integer>();
+        this.componentSizes = new ArrayList<Integer>();
         
         for (int vertex : this.graph.getVertices()) {
             visited.put(vertex, false);
@@ -29,15 +47,20 @@ public class DFSTree {
                 this.componentSizes.add(componentSize);
             }
         }
-        
-        /*
-         * TODO: complete this method with the depth-first
-         * search algorithm, modifying it to be able to
-         * provide information about parents and component
-         * sizes
-         */
     }
     
+    /**
+     * Conducts a Depth-First search given a starting node, and puts
+     * together information for the DFS tree
+     * 
+     * @param u - starting vertex for the current component
+     * @param visited - HashMap to keep track of which vertices
+     * 					have been visited
+     * @param parents - HashMap to keep track of the parent for
+     * 					each vertex
+     * 
+     * @return number of vertices connected to the vertex u
+     */
     private int dfsVisit(int u, Map<Integer, Boolean> visited,
                           Map<Integer, Integer> parents) {
         Set<Integer> components = new HashSet<Integer>();
@@ -60,18 +83,19 @@ public class DFSTree {
         return components.size();
     }
     
-    
-    // TODO: create the DFSTree constructor
-
     public IntGraphList getGraph() {
         return graph;
     }
 
     public int getParent(int v) {
-        // TODO: complete this method
-        return 0;
+    	return parents.get(v);
     }
 
+    /**
+     * Returns a list of the component sizes
+     * 
+     * @return a list of the component sizes
+     */
     public List<Integer> getComponentSizes() {
         return this.componentSizes;
     }

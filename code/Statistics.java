@@ -23,8 +23,7 @@ import java.util.List;
  * to Project 1, etc.).
  *
  * @author Mark Hancock
- * @author <your name> - you are going to author one of the
- *         methods
+ * @author Sean Rowe
  *
  */
 public class Statistics {
@@ -59,14 +58,73 @@ public class Statistics {
      *             possible repeated values.
      */
     private void calculateFromList(List<Integer> list) {
-        /*
-         * TODO: complete this method!
-         * 
-         * By the end of this method, you should have
-         * calculated the min, max, mean, Q1, Q2, and Q3
-         * values, as well as populated the counts HashMap
-         * with the counts of each value.
-         */
+    	buildCountsHash(list);
+    	Collections.sort(list);
+    	List<Integer> sortedKeys = getSortedUniqueKeys();
+    	min = sortedKeys.get(0);
+    	max = sortedKeys.get(sortedKeys.size()-1);
+    	mean = getSum()/list.size();
+    	q2 = calculateQ2(list);
+    	q1 = calculateQ1(list);
+    	q3 = calculateQ3(list);
+    }
+    
+    /**
+     * Builds the HashMap of counts of integers in the list
+     *
+     * @return HashMap of counts of integers in the list
+     */
+    private void buildCountsHash(List<Integer> list) {
+    	 for (int val : list) {
+    		 if (counts.containsKey(val)) {
+    			 counts.put(val, counts.get(val) + 1);
+    		 } else {
+    			 counts.put(val, 1);
+    		 }
+    	 }
+    }
+    
+    /**
+     * Calculates the second quartile value from the list
+     *
+     * @param a sorted list of integers
+     * @return the first second value from the list
+     */
+    private double calculateQ2(List<Integer> list) {
+    	if (list.size() % 2 == 1) {
+    		return list.get(list.size()/2);
+    	} else {
+    		int index_1 = list.size()/2;
+    		int index_2 = index_1 - 1;
+    		return Double.valueOf(list.get(index_1) + list.get(index_2)) / 2;
+    	}
+    }
+    
+    /**
+     * Calculates the first quartile value from the list
+     *
+     * @param a sorted list of integers
+     * @return the first quartile value from the list
+     */
+    private double calculateQ1(List<Integer> list) {
+    	int topIndex = list.size()/2;
+		return calculateQ2(list.subList(0, topIndex));
+    }
+    
+    /**
+     * Calculates the third quartile value from the list
+     *
+     * @param a sorted list of integers
+     * @return the third quartile value from the list
+     */
+    private double calculateQ3(List<Integer> list) {
+    	if (list.size() % 2 == 1) {
+    		int bottomIndex = list.size()/2 + 1;
+    		return calculateQ2(list.subList(bottomIndex, list.size()));
+    	} else {
+    		int bottomIndex = list.size()/2;
+    		return calculateQ2(list.subList(bottomIndex, list.size()));
+    	}
     }
 
     /**
@@ -147,5 +205,18 @@ public class Statistics {
      */
     public double getQ3() {
         return q3;
+    }
+    
+    /**
+     * Returns the sum for all of the values in the list.
+     *
+     * @return the sum for all of the values in the list
+     */
+    private double getSum() {
+    	double sum = 0;
+    	for (int key : counts.keySet()) {
+    		sum += (key * counts.get(key));
+    	}
+    	return sum;
     }
 }
